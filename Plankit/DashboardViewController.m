@@ -59,6 +59,13 @@
         [button setSelected:YES];
     } else {
         NSTimeInterval duration = self.time - self.launchTime;
+        if (duration < 10) {
+            [button setTitle:@"太短了" forState:UIControlStateNormal];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [button setTitle:@"启动" forState:UIControlStateNormal];
+            });
+            return;
+        }
         NSURL *docPath = [self applicationDocumentsDirectory];
         NSString *filename = [NSString stringWithFormat:@"%ld.txt", (long)self.launchTime];
         NSURL *fileURL = [docPath URLByAppendingPathComponent:filename];

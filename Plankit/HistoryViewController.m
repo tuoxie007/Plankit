@@ -7,6 +7,7 @@
 //
 
 #import "HistoryViewController.h"
+#import "UIView+PLKFrame.h"
 
 static NSString *identifier = @"PLKHistoryRecordCell";
 
@@ -15,16 +16,92 @@ static NSString *identifier = @"PLKHistoryRecordCell";
 @property (nonatomic, assign) NSTimeInterval ago;
 @property (nonatomic, copy) NSString *createTimeDesc;
 @property (nonatomic, copy) NSString *durationDesc;
+@property (nonatomic, assign) NSInteger duration;
 
 @end
 
 @implementation PLKRecord
 @end
 
+@interface PLKRecordCell : UITableViewCell
+
+@property (nonatomic, assign) double progress;
+@property (nonatomic, copy) NSString *duration;
+@property (nonatomic, copy) NSString *ago;
+
+@property (nonatomic, strong) UILabel *durationLabel;
+@property (nonatomic, strong) UILabel *agoLabel;
+@property (nonatomic, strong) UIView *progressView;
+
+@end
+
+@implementation PLKRecordCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
+        self.backgroundColor = [UIColor clearColor];
+        self.selectionStyle = UITableViewCellSelectionStyleNone;
+        [self.contentView addSubview:self.progressView];
+        [self.contentView addSubview:self.durationLabel];
+        [self.contentView addSubview:self.agoLabel];
+    }
+    return self;
+}
+
+- (void)layoutSubviews
+{
+    [super layoutSubviews];
+
+    self.progressView.size = CGSizeMake(self.progress * 0.9 * self.contentView.width, self.contentView.height);
+
+    self.durationLabel.text = self.duration;
+    [self.durationLabel sizeToFit];
+    self.durationLabel.leftBottom = CGPointMake(20, self.contentView.height - 20);
+
+    self.agoLabel.text = self.ago;
+    [self.agoLabel sizeToFit];
+    self.agoLabel.left = self.durationLabel.right + 10;
+    self.agoLabel.bottom = self.contentView.height - 20;
+}
+
+- (UILabel *)durationLabel
+{
+    if (!_durationLabel) {
+        _durationLabel = [UILabel new];
+        _durationLabel.textColor = [UIColor whiteColor];
+        _durationLabel.font = [UIFont systemFontOfSize:30];
+    }
+    return _durationLabel;
+}
+
+- (UILabel *)agoLabel
+{
+    if (!_agoLabel) {
+        _agoLabel = [UILabel new];
+        _agoLabel.textColor = [UIColor whiteColor];
+        _agoLabel.font = [UIFont systemFontOfSize:12];
+    }
+    return _agoLabel;
+}
+
+- (UIView *)progressView
+{
+    if (!_progressView) {
+        _progressView = [UIView new];
+        _progressView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.3];
+    }
+    return _progressView;
+}
+
+@end
+
 @interface HistoryViewController () <UITableViewDelegate, UITableViewDataSource>
 
 @property (nonatomic, weak) UITableView *contentView;
 @property (nonatomic, strong) NSArray<PLKRecord *> *records;
+@property (nonatomic, assign) NSInteger maxDuration;
 
 @end
 
@@ -39,6 +116,7 @@ static NSString *identifier = @"PLKHistoryRecordCell";
     UITableView *contentView = [[UITableView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:contentView];
     contentView.backgroundColor = [UIColor clearColor];
+    contentView.separatorStyle = UITableViewCellSeparatorStyleNone;
     contentView.delegate = self;
     contentView.dataSource = self;
     self.contentView = contentView;
@@ -67,17 +145,14 @@ static NSString *identifier = @"PLKHistoryRecordCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    PLKRecordCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:identifier];
-        cell.backgroundColor = [UIColor clearColor];
-        cell.textLabel.font = [UIFont systemFontOfSize:30];
-        cell.textLabel.textColor = [UIColor whiteColor];
-        cell.detailTextLabel.textColor = [UIColor whiteColor];
+        cell = [[PLKRecordCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
     }
     PLKRecord *record = self.records[indexPath.row];
-    cell.textLabel.text = record.durationDesc;
-    cell.detailTextLabel.text = record.createTimeDesc;
+    cell.duration = record.durationDesc;
+    cell.ago = record.createTimeDesc;
+    cell.progress = record.duration * 1.0 /  self.maxDuration;
     return cell;
 }
 
@@ -100,9 +175,9 @@ static NSString *identifier = @"PLKHistoryRecordCell";
                 continue;
             }
             if (ago < 24 * 3600) {
-                record.createTimeDesc = @"最近";
+                record.createTimeDesc = @"今天";
             } else {
-                NSInteger days = ago / 3600 * 24;
+                NSInteger days = ago / 3600 / 24;
                 record.createTimeDesc = [NSString stringWithFormat:@"%ld天前", days];
             }
         }
@@ -110,9 +185,16 @@ static NSString *identifier = @"PLKHistoryRecordCell";
                                                            encoding:NSUTF8StringEncoding
                                                               error:nil];
         if (content) {
-            record.durationDesc = [NSString stringWithFormat:@"%ld", [content integerValue]];
+            NSInteger duration = [content integerValue];
+            if (duration >= 10) {
+                record.duration = duration;
+                record.durationDesc = [NSString stringWithFormat:@"%ld", duration];
+                [records addObject:record];
+                if (duration > self.maxDuration) {
+                    self.maxDuration = duration;
+                }
+            }
         }
-        [records addObject:record];
     }
     [records sortUsingComparator:^NSComparisonResult(PLKRecord * _Nonnull r1, PLKRecord * _Nonnull r2) {
         return r1.ago - r2.ago;

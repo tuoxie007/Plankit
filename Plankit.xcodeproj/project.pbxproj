@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3CA4400A215CF9F600FBAADB /* UIView+PLKFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA44009215CF9F600FBAADB /* UIView+PLKFrame.m */; };
 		9665FD0A21454D1C00A5B0BA /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9665FD0921454D1C00A5B0BA /* AppDelegate.m */; };
 		9665FD0D21454D1C00A5B0BA /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9665FD0C21454D1C00A5B0BA /* ViewController.m */; };
 		9665FD1021454D1C00A5B0BA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9665FD0E21454D1C00A5B0BA /* Main.storyboard */; };
@@ -18,6 +19,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3CA44008215CF9F600FBAADB /* UIView+PLKFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+PLKFrame.h"; sourceTree = "<group>"; };
+		3CA44009215CF9F600FBAADB /* UIView+PLKFrame.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+PLKFrame.m"; sourceTree = "<group>"; };
 		9665FD0521454D1C00A5B0BA /* Plankit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Plankit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9665FD0821454D1C00A5B0BA /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		9665FD0921454D1C00A5B0BA /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -77,6 +80,8 @@
 				9665FD1321454D1F00A5B0BA /* LaunchScreen.storyboard */,
 				9665FD1621454D1F00A5B0BA /* Info.plist */,
 				9665FD1721454D1F00A5B0BA /* main.m */,
+				3CA44008215CF9F600FBAADB /* UIView+PLKFrame.h */,
+				3CA44009215CF9F600FBAADB /* UIView+PLKFrame.m */,
 			);
 			path = Plankit;
 			sourceTree = "<group>";
@@ -155,6 +160,7 @@
 				9665FD1821454D1F00A5B0BA /* main.m in Sources */,
 				9665FD0A21454D1C00A5B0BA /* AppDelegate.m in Sources */,
 				9665FD232146A5CA00A5B0BA /* HistoryViewController.m in Sources */,
+				3CA4400A215CF9F600FBAADB /* UIView+PLKFrame.m in Sources */,
 				9665FD202146A5B400A5B0BA /* DashboardViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -296,7 +302,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q58Y9Y87W8;
+				DEVELOPMENT_TEAM = RQ542445HX;
 				INFOPLIST_FILE = Plankit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -313,7 +319,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = Q58Y9Y87W8;
+				DEVELOPMENT_TEAM = RQ542445HX;
 				INFOPLIST_FILE = Plankit/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
